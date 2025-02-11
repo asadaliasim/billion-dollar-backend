@@ -11,10 +11,10 @@ const storage = multer.diskStorage({
     // Get the imageType from the query parameters
     // const imageType = req.query.imageType
     //temp used static as we have only blocks
-    let imageType = 'block'
-    const destPath = path.resolve(getDestFolderPath(imageType, '.'))
-    if (!fs.existsSync(destPath)) fs.mkdirSync(destPath, { recursive: true })
 
+    const destPath = '/var/www/billion-dollar-backend/public/blocks'
+    if (!fs.existsSync(destPath)) fs.mkdirSync(destPath, { recursive: true })
+    console.log(`Saving file to: ${destPath}`)
     cb(null, destPath)
   },
   filename: (req, file, cb) => {
