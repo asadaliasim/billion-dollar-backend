@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     // const imageType = req.query.imageType
     //temp used static as we have only blocks
     let imageType = 'block'
-    const destPath = getDestFolderPath(imageType, '.')
+    const destPath = path.resolve(getDestFolderPath(imageType, '.'))
     if (!fs.existsSync(destPath)) fs.mkdirSync(destPath, { recursive: true })
 
     cb(null, destPath)
