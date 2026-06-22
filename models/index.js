@@ -1,3 +1,4 @@
 module.exports = {
-  Block: require('./block')
+  Block: require('./block'),
+  Payment: require('./payment')
 }

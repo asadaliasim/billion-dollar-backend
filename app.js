@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 const createError = require('http-errors')
 const express = require('express')
 const logger = require('morgan')
@@ -12,26 +13,25 @@ app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }))
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(express.static(__dirname))
-
 // ** import and init db
 require('./configs/mongodbConfig')
 
 const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: process.env.FRONTEND_URL || '*',
+  optionsSuccessStatus: 200
 }
 
 app.use(cors(corsOptions))
 app.use(logger('dev'))
 app.use(
   express.json({
-    verify: (req, res, buffer) => (req['rawBody'] = buffer)
+    verify: (req, res, buffer) => {
+      req.rawBody = buffer
+    }
   })
 )
-app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(express.static(__dirname))
+app.use('/public', express.static(path.join(__dirname, 'public')))
 
 app.use('/api', require('./routes/index'))
 

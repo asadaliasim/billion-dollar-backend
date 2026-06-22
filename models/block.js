@@ -5,6 +5,10 @@ const Schema = mongoose.Schema
 const blockSchema = new Schema(
   {
     walletAddress: { type: String },
+    stripeSessionId: { type: String },
+    stripePaymentIntentId: { type: String },
+    customerEmail: { type: String },
+    amountPaidCents: { type: Number },
     startCoord: { type: String },
     endCoord: { type: String },
     image: { type: String },

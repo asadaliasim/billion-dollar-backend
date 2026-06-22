@@ -2,20 +2,18 @@ const util = require('util')
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
-const { getDestFolderPath } = require('../utils')
 
 const MAX_FILE_SIZE = 30 * 1024 * 1024
 
+const uploadDir =
+  process.env.PUBLIC_UPLOAD_PATH ||
+  path.join(__dirname, '../public/blocks')
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Get the imageType from the query parameters
-    // const imageType = req.query.imageType
-    //temp used static as we have only blocks
-
-    const destPath = '/var/www/billion-dollar-backend/public/blocks'
-    if (!fs.existsSync(destPath)) fs.mkdirSync(destPath, { recursive: true })
-    console.log(`Saving file to: ${destPath}`)
-    cb(null, destPath)
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true })
+    console.log(`Saving file to: ${uploadDir}`)
+    cb(null, uploadDir)
   },
   filename: (req, file, cb) => {
     const FILE_NAME = `${Date.now()}${path.extname(file.originalname)}`

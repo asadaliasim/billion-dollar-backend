@@ -1,3 +1,4 @@
 module.exports = {
-  addBlocksValidation: require('./addBlocksValidation')
+  addBlocksValidation: require('./addBlocksValidation'),
+  createCheckoutValidation: require('./createCheckoutValidation')
 }
