@@ -1,6 +1,7 @@
 const httpErrors = require('http-errors')
 const { Payment } = require('../../models')
 const { getStripe } = require('../../utils/stripeClient')
+const { creditReferralForPayment } = require('../../utils/creditReferral')
 
 module.exports = async (req, res, next) => {
   const stripe = getStripe()
@@ -36,6 +37,7 @@ module.exports = async (req, res, next) => {
             : session.payment_intent?.id
         payment.customerEmail = session.customer_details?.email || payment.customerEmail
         await payment.save()
+        await creditReferralForPayment(payment)
       }
     }
 
