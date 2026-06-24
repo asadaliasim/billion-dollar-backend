@@ -14,6 +14,7 @@ const blockSchema = new Schema(
     image: { type: String },
     addUrl: { type: String },
     addDescription: { type: String },
+    country: { type: String },
     customText: { type: String },
     textUrl: { type: String },
     backgroundColor: { type: String },
