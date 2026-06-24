@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
       return next(httpErrors(409, 'Selected area overlaps with an existing or reserved block'))
     }
 
-    const pricePerBlockCents = parseInt(process.env.STRIPE_PRICE_PER_BLOCK_CENTS || '10000', 10)
+    const pricePerBlockCents = parseInt(process.env.STRIPE_PRICE_PER_BLOCK_CENTS || '1000', 10)
     const amountCents = value.blockCount * pricePerBlockCents
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
     const expiresAt = new Date(Date.now() + CHECKOUT_TTL_MINUTES * 60 * 1000)

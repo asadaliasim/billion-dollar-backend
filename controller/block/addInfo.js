@@ -33,7 +33,7 @@ module.exports = async (req, res, next) => {
       ...payload,
       stripePaymentIntentId: payment.stripePaymentIntentId,
       customerEmail: payment.customerEmail,
-      amountPaidCents: payment.amountPaidCents
+      amountPaidCents: payment.amountCents
     })
 
     payment.status = 'used'
