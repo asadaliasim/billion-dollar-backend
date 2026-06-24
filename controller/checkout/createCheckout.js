@@ -55,7 +55,7 @@ module.exports = async (req, res, next) => {
         endCoord,
         blockCount: String(value.blockCount)
       },
-      success_url: `${frontendUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${frontendUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl}/?payment=cancel`,
       expires_at: Math.floor(expiresAt.getTime() / 1000)
     })
