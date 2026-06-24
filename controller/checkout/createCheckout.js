@@ -4,6 +4,7 @@ const { createCheckoutValidation } = require('../../joiSchemas')
 const { getStripe } = require('../../utils/stripeClient')
 const { blockCountFromCoords } = require('../../utils/parseCoords')
 const { hasOverlap } = require('../../utils/overlapCheck')
+const { resolveFrontendUrl } = require('../../utils/resolveFrontendUrl')
 
 const CHECKOUT_TTL_MINUTES = 30
 
@@ -30,7 +31,7 @@ module.exports = async (req, res, next) => {
 
     const pricePerBlockCents = parseInt(process.env.STRIPE_PRICE_PER_BLOCK_CENTS || '1000', 10)
     const amountCents = value.blockCount * pricePerBlockCents
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
+    const frontendUrl = resolveFrontendUrl(value.frontendOrigin)
     const expiresAt = new Date(Date.now() + CHECKOUT_TTL_MINUTES * 60 * 1000)
 
     const stripe = getStripe()
