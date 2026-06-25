@@ -16,8 +16,20 @@ app.use(passport.session())
 // ** import and init db
 require('./configs/mongodbConfig')
 
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(url => url.trim()) : ['*']
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || '*',
+  origin: function (origin, callback) {
+    if (
+      !origin || // allow Postman, server-to-server requests
+      allowedOrigins.includes('*') ||
+      allowedOrigins.includes(origin)
+    ) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   optionsSuccessStatus: 200
 }
 
