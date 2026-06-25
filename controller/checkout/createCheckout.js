@@ -5,6 +5,7 @@ const { getStripe } = require('../../utils/stripeClient')
 const { blockCountFromCoords } = require('../../utils/parseCoords')
 const { hasOverlap } = require('../../utils/overlapCheck')
 const { resolveFrontendUrl } = require('../../utils/resolveFrontendUrl')
+const { normalizeReferralCode } = require('../../utils/normalizeReferralCode')
 
 const CHECKOUT_TTL_MINUTES = 30
 
@@ -33,6 +34,7 @@ module.exports = async (req, res, next) => {
     const amountCents = value.blockCount * pricePerBlockCents
     const frontendUrl = resolveFrontendUrl(value.frontendOrigin)
     const expiresAt = new Date(Date.now() + CHECKOUT_TTL_MINUTES * 60 * 1000)
+    const referralCode = normalizeReferralCode(value.referralCode)
 
     const stripe = getStripe()
     const session = await stripe.checkout.sessions.create({
@@ -54,7 +56,8 @@ module.exports = async (req, res, next) => {
       metadata: {
         startCoord,
         endCoord,
-        blockCount: String(value.blockCount)
+        blockCount: String(value.blockCount),
+        ...(referralCode ? { referralCode } : {})
       },
       success_url: `${frontendUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl}/?payment=cancel`,
@@ -68,7 +71,8 @@ module.exports = async (req, res, next) => {
       amountCents,
       startCoord,
       endCoord,
-      expiresAt
+      expiresAt,
+      ...(referralCode ? { referralCode } : {})
     })
 
     return res.status(200).json({

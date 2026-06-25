@@ -1,6 +1,7 @@
 const httpErrors = require('http-errors')
 const { Payment } = require('../../models')
 const { getStripe } = require('../../utils/stripeClient')
+const { creditReferralForPayment } = require('../../utils/creditReferral')
 
 module.exports = async (req, res, next) => {
   try {
@@ -22,6 +23,7 @@ module.exports = async (req, res, next) => {
             : session.payment_intent?.id
         payment.customerEmail = session.customer_details?.email || payment.customerEmail
         await payment.save()
+        await creditReferralForPayment(payment)
       } else if (session.status === 'expired') {
         payment.status = 'expired'
         await payment.save()
@@ -35,6 +37,16 @@ module.exports = async (req, res, next) => {
     ) {
       payment.status = 'expired'
       await payment.save()
+    }
+
+    payment = await Payment.findOne({ stripeSessionId: sessionId })
+
+    if (
+      payment.status === 'paid' &&
+      payment.referralCode &&
+      !payment.referralCredited
+    ) {
+      payment = await creditReferralForPayment(payment)
     }
 
     return res.status(200).json({

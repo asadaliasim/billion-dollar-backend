@@ -16,7 +16,9 @@ const paymentSchema = new Schema(
     startCoord: { type: String, required: true },
     endCoord: { type: String, required: true },
     customerEmail: { type: String },
-    expiresAt: { type: Date }
+    expiresAt: { type: Date },
+    referralCode: { type: String, lowercase: true },
+    referralCredited: { type: Boolean, default: false }
   },
   { timestamps: true }
 )
