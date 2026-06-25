@@ -43,7 +43,14 @@ app.use(
   })
 )
 app.use(express.urlencoded({ extended: false }))
-app.use('/public', express.static(path.join(__dirname, 'public')))
+app.use(
+  '/public',
+  express.static(path.join(__dirname, 'public'), {
+    maxAge: '7d',
+    etag: true,
+    lastModified: true,
+  })
+)
 
 app.use('/api', require('./routes/index'))
 
